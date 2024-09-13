@@ -1,34 +1,34 @@
-// app/javascript/controllers/user_select_controller.js
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["email"]
+  static targets = ["email", "name"]
 
   connect() {
-    console.log("User controller connected")
-    console.log("Email target:", this.hasEmailTarget ? this.emailTarget : "Not found")
+    console.log("User Select Controller connected")
     const userSelect = document.getElementById("todo_user_id")
     if (userSelect && userSelect.value) {
-      this.fetchEmail({ target: userSelect })
+      this.fetchEmailAndName({ target: userSelect })
     }
   }
 
-  fetchEmail(event) {
+  fetchEmailAndName(event) {
     const userId = event.target.value
     console.log("Selected User ID:", userId)
 
     if (userId) {
-      fetch(`/users/${userId}/email`)
+      fetch(`/users/${userId}/info`)
         .then(response => response.json())
         .then(data => {
-          console.log("Email Data:", data)
+          console.log("User Data:", data)
           this.emailTarget.value = data.email
+          this.nameTarget.value = data.name
         })
         .catch(error => {
-          console.error("Error fetching email:", error)
+          console.error("Error fetching user info:", error)
         })
     } else {
       this.emailTarget.value = ""
+      this.nameTarget.value = ""
     }
   }
 }

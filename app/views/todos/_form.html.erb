@@ -10,7 +10,7 @@
     </div>
   <% end %>
   <div class="my-5">
-    <%= form.label :name, class: 'font-medium' %>
+    <%= form.label :name, class: "font-medium" %>
     <div class="flex flex-col min-[400px]:flex-row">
       <%= form.text_field :name, class: "shadow rounded-md border border-gray-300 outline-none px-3 py-2 mt-2 w-full bg-transparent hover:border-blue-600" %>
       <%= form.submit class: "rounded-lg px-3 py-2 mt-2 ml-0 min-[400px]:ml-3 text-blue-600 hover:text-white border border-blue-600 hover:bg-blue-600 font-medium cursor-pointer" %>
@@ -18,21 +18,22 @@
   </div>
   <% if !form.object.new_record? %>
     <div class="my-5">
-      <%= form.label :new_date, class: 'font-medium' %>
+      <%= form.label :new_date, class: "font-medium" %>
       <div class="flex flex-col min-[400px]:flex-row">
         <%= form.date_field :new_date, class: "shadow rounded-md border border-gray-300 outline-none px-3 py-2 mt-2 w-full bg-transparent hover:border-blue-600", min: Date.today %>
-        <%# form.submit class: "rounded-lg px-3 py-2 mt-2 ml-0 min-[400px]:ml-3 text-blue-600 hover:text-white border border-blue-600 hover:bg-blue-600 font-medium cursor-pointer" %>
+        <% # form.submit class: "rounded-lg px-3 py-2 mt-2 ml-0 min-[400px]:ml-3 text-blue-600 hover:text-white border border-blue-600 hover:bg-blue-600 font-medium cursor-pointer" %>
       </div>
     </div>
     <div data-controller="user-select">
-      <div class="my-5" >
-        <%= form.label :user_id, "User", class: 'font-medium', for: "todo_user_id" %>
-        <div class="flex flex-col min-[400px]:flex-row">
-          <%= form.collection_select :user_id, User.all, :id, :name, { prompt: "Select a User" }, { id: "todo_user_id", class: "shadow rounded-md border border-gray-300 outline-none px-3 py-2 mt-2 w-full bg-transparent hover:border-blue-600", data: { action: "change->user-select#fetchEmail" } } %>
-        </div>
-      </div>
       <div class="my-5">
-        <%= form.label :user_email, "Email", class: 'font-medium', for: "todo_user_email" %>
+    <%= form.label :user_id, "User", class: "font-medium", for: "todo_user_id" %>
+    <div class="flex flex-col min-[400px]:flex-row">
+      <%= form.collection_select :user_id, User.all, :id, :name, { prompt: "Select a User" }, { id: "todo_user_id", class: "shadow rounded-md border border-gray-300 outline-none px-3 py-2 mt-2 w-full bg-transparent hover:border-blue-600", data: { action: "change->user-select#fetchEmailAndName" } } %>
+    </div>
+  </div>
+  <%= form.hidden_field :user_name, data: { user_select_target: "name" } %>
+      <div class="my-5">
+        <%= form.label :user_email, "Email", class: "font-medium", for: "todo_user_email" %>
         <div class="flex flex-col min-[400px]:flex-row">
           <%= form.text_field :user_email, id: "todo_user_email", value: @user_email, class: "shadow rounded-md border border-gray-300 outline-none px-3 py-2 mt-2 w-full bg-transparent hover:border-blue-600", readonly: true, data: { user_select_target: "email" } %>
         </div>

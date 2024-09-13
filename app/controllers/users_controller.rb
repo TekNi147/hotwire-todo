@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  def email
+  def info
     user = User.find(params[:id])
-    render json: { email: user.email }
+    render json: { email: user.email, name: user.name }
   end
 end
