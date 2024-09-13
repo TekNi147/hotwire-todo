@@ -4,4 +4,7 @@ class Todo < ApplicationRecord
         incomplete: 0,
         complete: 1
     }    
+
+    # belongs_to :user
 end
+

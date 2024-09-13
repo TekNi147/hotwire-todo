@@ -1,9 +1,15 @@
 Rails.application.routes.draw do
   resources :todos do
     collection do
-      delete 'destroy_all'
+      delete "destroy_all"
     end
     patch :change_status, on: :member
+  end
+
+  resources :users, only: [] do
+    member do
+      get :email
+    end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

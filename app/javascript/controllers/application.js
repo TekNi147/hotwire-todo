@@ -1,9 +1,5 @@
 import { Application } from "@hotwired/stimulus"
+import UserSelectController from "./controllers/user_select_controller"
 
 const application = Application.start()
-
-// Configure Stimulus development experience
-application.debug = false
-window.Stimulus   = application
-
-export { application }
+application.register("user-select", UserSelectController)
