@@ -81,4 +81,9 @@ end
 
 gem 'tailwindcss-rails', '~> 2.7'
 
-gem 'dotenv-rails', groups: %i[development test]
+gem 'dotenv-rails'
+
+gem 'sidekiq'
+gem 'sidekiq-cron'
+gem 'sidekiq-scheduler'
+

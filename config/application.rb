@@ -1,15 +1,14 @@
-require_relative "boot"
+require_relative 'boot'
 
-require "rails/all"
-require "active_storage/engine"
-require "action_mailer/railtie"
-require "action_cable/engine"
+require 'rails/all'
+require 'active_storage/engine'
+require 'action_mailer/railtie'
+require 'action_cable/engine'
+require 'dotenv-rails'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
-
-Dotenv::Railtie.load if defined?(Dotenv::Railtie)
 
 module HotwireTodo
   class Application < Rails::Application
@@ -19,7 +18,7 @@ module HotwireTodo
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
-    config.autoload_lib(ignore: %w(assets tasks))
+    config.autoload_lib(ignore: %w[assets tasks])
     # create a logger with a file as a logging target
     config.logger = Logger.new('log/debug.log')
     # set the minimum log level
@@ -31,5 +30,7 @@ module HotwireTodo
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    config.active_job.queue_adapter = :sidekiq
   end
 end

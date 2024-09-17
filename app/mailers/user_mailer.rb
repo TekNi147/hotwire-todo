@@ -9,3 +9,4 @@ class UserMailer < ApplicationMailer
     mail(to: @user_email, subject: 'ยินดีต้อนรับสู่เว็บไซต์ที่ยอดเยี่ยมของฉัน')
   end
 end
+
