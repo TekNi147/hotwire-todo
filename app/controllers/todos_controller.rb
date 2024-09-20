@@ -5,14 +5,14 @@ class TodosController < ApplicationController
     @todo.update(status: todo_params[:status])
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.remove("#{helpers.dom_id(@todo)}_container") }
-      format.html { redirect_to todos_path, notice: 'Updated todo status.' }
+      format.html { redirect_to todos_path, notice: "Updated todo status." }
     end
   end
 
   # GET /todos or /todos.json
   def index
-    Rails.logger.info 'Index view accessed'
-    @todos = Todo.where(status: params[:status].presence || 'incomplete')
+    Rails.logger.info "Index view accessed"
+    @todos = Todo.where(status: params[:status].presence || "incomplete")
   end
 
   # GET /todos/1 or /todos/1.json
@@ -31,7 +31,7 @@ class TodosController < ApplicationController
   def destroy_all
     Todo.destroy_all
     respond_to do |format|
-      format.html { redirect_to todos_url, notice: 'Todo was successfully reseted.' }
+      format.html { redirect_to todos_url, notice: "Todo was successfully reseted." }
     end
   end
 
@@ -41,13 +41,14 @@ class TodosController < ApplicationController
 
     respond_to do |format|
       if @todo.save
-        Rails.logger.info 'Create new todo #'
+        Turbo::StreamsChannel.broadcast_prepend_to "todos_channel", target: "todos-list", partial: "todos/todo", locals: { todo: @todo }
+        Rails.logger.info "Create new todo #"
         format.turbo_stream
-        format.html { redirect_to todo_url(@todo), notice: 'Todo was successfully created.' }
+        format.html { redirect_to todo_url(@todo), notice: "Todo was successfully created." }
         format.json { render :show, status: :created, location: @todo }
       else
         format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("#{helpers.dom_id(@todo)}_form", partial: 'form',
+          render turbo_stream: turbo_stream.replace("#{helpers.dom_id(@todo)}_form", partial: "form",
                                                                                      locals: { todo: @todo })
         end
         format.html { render :new, status: :unprocessable_entity }
@@ -62,12 +63,11 @@ class TodosController < ApplicationController
       if @todo.update(todo_params)
         UserMailerJob.perform_later(@todo)
         format.turbo_stream
-        format.html { redirect_to todo_url(@todo), notice: 'Todo was successfully updated.' }
+        format.html { redirect_to todo_url(@todo), notice: "Todo was successfully updated." }
         format.json { render :show, status: :ok, location: @todo }
       else
         format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("#{helpers.dom_id(@todo)}_form", partial: 'form',
-                                                                                     locals: { todo: @todo })
+          render turbo_stream: turbo_stream.replace("#{helpers.dom_id(@todo)}_form", partial: "form", locals: { todo: @todo })
         end
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @todo.errors, status: :unprocessable_entity }
@@ -81,9 +81,10 @@ class TodosController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.remove("#{helpers.dom_id(@todo)}_container") }
-      format.html { redirect_to todos_url, notice: 'Todo was successfully destroyed.' }
+      format.html { redirect_to todos_url, notice: "Todo was successfully destroyed." }
       format.json { head :no_content }
     end
+    Turbo::StreamsChannel.broadcast_remove_to "todos_channel", target: "#{helpers.dom_id(@todo)}_container", partial: "todos/todo", locals: { todo: @todo }
   end
 
   private
